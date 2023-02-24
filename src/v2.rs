@@ -75,6 +75,7 @@ pub(crate) struct Secret2(usize);
 
 impl SecretTrait for Secret1 {}
 impl SecretTrait for Secret2 {}
+impl SecretTrait for usize {}
 
 impl Deserialize for Secret1 {
     fn deserialize(value: String) -> Self {
@@ -98,29 +99,56 @@ impl Serialize for Secret2 {
     }
 }
 
+impl Deserialize for usize {
+    fn deserialize(value: String) -> Self {
+        value.parse().unwrap()
+    }
+}
+impl Serialize for usize {
+    fn serialize(self) -> String {
+        format!("{}", self)
+    }
+}
+
 pub fn main() {
     let secret_1 = Secret::new(Secret1("secret_1".into()));
     let secret_2 = Secret::new(Secret2(42));
+    let secret_3 = Secret::new(42);
 
-    println!("{:?}, {:?}", secret_1.secret(), secret_2.secret());
+    println!(
+        "{:?}, {:?}, {:?}",
+        secret_1.secret(),
+        secret_2.secret(),
+        secret_3.secret()
+    );
 
     //secret_1.decode(); // no method named `decode`
     //secret_2.decode(); // no method named `decode`
+    //secret_3.decode(); // no method named `decode`
 
     let secret_1 = secret_1.encode();
     let secret_2 = secret_2.encode();
+    let secret_3 = secret_3.encode();
 
     println!(
-        "{:?}, {:?}",
+        "{:?}, {:?}, {:?}",
         secret_1.encoded_secret(),
-        secret_2.encoded_secret()
+        secret_2.encoded_secret(),
+        secret_3.encoded_secret(),
     );
 
     //secret_1.encode(); // no method named `encode`
     //secret_2.encode(); // no method named `encode`
+    //secret_3.encode(); // no method named `encode`
 
     let secret_1 = secret_1.decode();
     let secret_2 = secret_2.decode();
+    let secret_3 = secret_3.decode();
 
-    println!("{:?}, {:?}", secret_1.secret(), secret_2.secret());
+    println!(
+        "{:?}, {:?}, {:?}",
+        secret_1.secret(),
+        secret_2.secret(),
+        secret_3.secret(),
+    );
 }
