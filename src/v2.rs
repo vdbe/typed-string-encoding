@@ -3,25 +3,25 @@ use std::{fmt::Debug, marker::PhantomData};
 #[derive(Debug)]
 struct Encoded(String);
 #[derive(Debug)]
-struct Decoded<T: Debug>(T);
+pub(crate) struct Decoded<T: Debug>(T);
 
 #[derive(Debug)]
-struct Secret<T: SecretTrait, State = Decoded<T>> {
+pub(crate) struct Secret<T: SecretTrait, State = Decoded<T>> {
     content: State,
     _type: PhantomData<T>,
 }
 
 /// Placeholder for `serde::Serialize`
-trait Serialize {
+pub(crate) trait Serialize {
     fn serialize(self) -> String;
 }
 
 /// Placeholder for `serde::Deserialize`
-trait Deserialize {
+pub(crate) trait Deserialize {
     fn deserialize(value: String) -> Self;
 }
 
-trait SecretTrait: Serialize + Deserialize + Debug + Clone {}
+pub(crate) trait SecretTrait: Serialize + Deserialize + Debug + Clone {}
 
 impl<T: SecretTrait> Secret<T> {
     fn new(secret: T) -> Secret<T, Decoded<T>> {
@@ -69,9 +69,9 @@ impl<T: SecretTrait> Secret<T, Decoded<T>> {
 }
 
 #[derive(Debug, Clone)]
-struct Secret1(String);
+pub(crate) struct Secret1(String);
 #[derive(Debug, Clone)]
-struct Secret2(usize);
+pub(crate) struct Secret2(usize);
 
 impl SecretTrait for Secret1 {}
 impl SecretTrait for Secret2 {}
