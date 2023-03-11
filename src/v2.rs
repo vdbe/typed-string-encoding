@@ -16,7 +16,7 @@ pub(crate) trait Serialize {
     fn serialize(self) -> String;
 }
 
-/// Placeholder for `serde::Deserialize`
+/// Placeholder for `serde::DeserializeOwned`
 pub(crate) trait Deserialize {
     fn deserialize(value: String) -> Self;
 }
