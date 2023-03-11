@@ -36,10 +36,11 @@ jobs:
         with:
           toolchain: ${{ matrix.toolchain }}
           components: clippy
-      - name: cargo clippy ${{ matrix.toolchain }}
+      - name: cargo clippy
         uses: actions-rs/clippy-check@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          name: ${{ matrix.toolchain }}
   doc:
     runs-on: ubuntu-latest
     name: nightly / doc
