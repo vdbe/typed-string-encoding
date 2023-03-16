@@ -67,3 +67,36 @@ pub fn main() {
 
     println!("{:?}, {:?}", decoded_secret1.0, decoded_secret2.0);
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_secret1_encode_decode() {
+        let secret = Secret1(String::from("My secret message"));
+        let encoded_secret = secret.encode();
+        let decoded_secret = encoded_secret.decode();
+        assert_eq!(decoded_secret.0, "My secret message");
+    }
+
+    #[test]
+    fn test_secret2_encode_decode() {
+        let secret = Secret2(42);
+        let encoded_secret = secret.encode();
+        let decoded_secret = encoded_secret.decode();
+        assert_eq!(decoded_secret.0, 42);
+    }
+
+    #[test]
+    fn test_secret1_encoded_secret_new() {
+        let encoded_secret = EncodedSecret::<Secret1>::new(String::from("My secret message"));
+        assert_eq!(encoded_secret.content, "My secret message");
+    }
+
+    #[test]
+    fn test_secret2_encoded_secret_new() {
+        let encoded_secret = EncodedSecret::<Secret2>::new(String::from("42"));
+        assert_eq!(encoded_secret.content, "42");
+    }
+}
