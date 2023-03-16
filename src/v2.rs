@@ -68,9 +68,9 @@ impl<T: SecretTrait> Secret<T, Decoded<T>> {
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub(crate) struct Secret1(String);
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub(crate) struct Secret2(usize);
 
 impl SecretTrait for Secret1 {}
@@ -151,4 +151,30 @@ pub fn main() {
         secret_2.secret(),
         secret_3.secret(),
     );
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_secret_encoding_decoding() {
+        let secret_1 = Secret::new(Secret1("secret_1".into()));
+        let secret_2 = Secret::new(Secret2(42));
+
+        // Encode the secrets
+        let encoded_secret_1 = secret_1.encode();
+        let encoded_secret_2 = secret_2.encode();
+
+        // Decode the secrets
+        let decoded_secret_1 = encoded_secret_1.decode();
+        let decoded_secret_2 = encoded_secret_2.decode();
+
+        // Ensure the secrets match
+        let secret_1 = Secret::new(Secret1("secret_1".into()));
+        let secret_2 = Secret::new(Secret2(42));
+
+        assert_eq!(decoded_secret_1.secret(), secret_1.secret());
+        assert_eq!(decoded_secret_2.secret(), secret_2.secret());
+    }
 }
